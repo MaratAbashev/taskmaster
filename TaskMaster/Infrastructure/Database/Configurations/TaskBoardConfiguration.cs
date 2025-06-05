@@ -11,7 +11,8 @@ public class TaskBoardConfiguration: IEntityTypeConfiguration<TaskBoard>
         builder.HasKey(tb => tb.Id);
         builder.HasMany(tb => tb.BoardUsers)
             .WithOne(tb => tb.Board)
-            .HasForeignKey(tb => tb.BoardId);
+            .HasForeignKey(tb => tb.BoardId)
+            .OnDelete(DeleteBehavior.Cascade);
         builder.Property(tb => tb.Title)
             .IsRequired();
         

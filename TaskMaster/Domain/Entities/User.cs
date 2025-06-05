@@ -23,7 +23,7 @@ public class User : Entity<long>
                 : $"[{nameToPing}](tg://user?id={Id})";
         }
     }
-
+    public List<RefreshToken>? RefreshTokens { get; set; }
     public List<BoardUser>? BoardUsers { get; set; } = [];
     public List<TaskWorker>? TaskWorkers { get; set; } = [];
     public List<ToDoTask>? AuthoredTasks { get; set; } = [];

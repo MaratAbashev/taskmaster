@@ -15,7 +15,8 @@ public class ToDoTaskConfiguration: IEntityTypeConfiguration<ToDoTask>
             .ValueGeneratedOnAdd();
         builder.HasOne(t => t.Board)
             .WithMany(tb => tb.BoardTasks)
-            .HasForeignKey(t => t.BoardId);
+            .HasForeignKey(t => t.BoardId)
+            .OnDelete(DeleteBehavior.Cascade);
         builder.HasOne(t => t.Author)
             .WithMany(a => a.AuthoredTasks)
             .HasForeignKey(t => t.AuthorId);

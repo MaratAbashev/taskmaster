@@ -10,6 +10,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options): DbContext(opt
     public DbSet<ToDoTask> Tasks { get; set; }
     public DbSet<TaskBoard> TaskBoards { get; set; }
     public DbSet<TelegramGroup> TelegramGroups { get; set; }
+    public DbSet<BoardUser> BoardUsers { get; set; }
+    public DbSet<TaskWorker> TaskWorkers { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,6 +22,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options): DbContext(opt
         modelBuilder.ApplyConfiguration(new TelegramGroupConfiguration());
         modelBuilder.ApplyConfiguration(new ToDoTaskConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }

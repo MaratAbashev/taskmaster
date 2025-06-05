@@ -1,9 +1,9 @@
 ﻿using Domain.Models;
 using Domain.Utils;
 
-namespace Application;
+namespace Domain.Abstractions.Services;
 
 public interface IJwtWorkerService
 {
-    Result<string> CreateJwtToken(UserDto userDto);
+    Result<TokenDto> CreateTokens(UserDto userDto);
 }

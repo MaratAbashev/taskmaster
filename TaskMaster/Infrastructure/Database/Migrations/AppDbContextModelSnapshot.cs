@@ -48,7 +48,38 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BoardUser", (string)null);
+                    b.ToTable("BoardUsers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Domain.Entities.TaskBoard", b =>
@@ -69,10 +100,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId")
-                        .IsUnique();
-
-                    b.ToTable("TaskBoards", (string)null);
+                    b.ToTable("TaskBoards");
                 });
 
             modelBuilder.Entity("Domain.Entities.TaskWorker", b =>
@@ -103,7 +131,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TaskWorker", (string)null);
+                    b.ToTable("TaskWorkers");
                 });
 
             modelBuilder.Entity("Domain.Entities.TelegramGroup", b =>
@@ -122,7 +150,10 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TelegramGroups", (string)null);
+                    b.HasIndex("BoardId")
+                        .IsUnique();
+
+                    b.ToTable("TelegramGroups");
                 });
 
             modelBuilder.Entity("Domain.Entities.ToDoTask", b =>
@@ -164,7 +195,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("Tasks", (string)null);
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -189,7 +220,7 @@ namespace Infrastructure.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.BoardUser", b =>
@@ -211,13 +242,15 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.TaskBoard", b =>
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("Domain.Entities.TelegramGroup", "Group")
-                        .WithOne("Board")
-                        .HasForeignKey("Domain.Entities.TaskBoard", "GroupId");
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Group");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.TaskWorker", b =>
@@ -237,6 +270,17 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("Task");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TelegramGroup", b =>
+                {
+                    b.HasOne("Domain.Entities.TaskBoard", "Board")
+                        .WithOne("Group")
+                        .HasForeignKey("Domain.Entities.TelegramGroup", "BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
                 });
 
             modelBuilder.Entity("Domain.Entities.ToDoTask", b =>
@@ -261,11 +305,8 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("BoardTasks");
 
                     b.Navigation("BoardUsers");
-                });
 
-            modelBuilder.Entity("Domain.Entities.TelegramGroup", b =>
-                {
-                    b.Navigation("Board");
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Domain.Entities.ToDoTask", b =>
@@ -278,6 +319,8 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("AuthoredTasks");
 
                     b.Navigation("BoardUsers");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("TaskWorkers");
                 });

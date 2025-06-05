@@ -11,6 +11,7 @@ public class TelegramGroupConfiguration: IEntityTypeConfiguration<TelegramGroup>
         builder.HasKey(tg => tg.Id);
         builder.HasOne(tg => tg.Board)
             .WithOne(tb => tb.Group)
-            .HasForeignKey<TaskBoard>(tb => tb.GroupId);
+            .HasForeignKey<TelegramGroup>(tg => tg.BoardId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

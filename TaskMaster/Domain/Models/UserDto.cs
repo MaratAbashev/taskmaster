@@ -23,4 +23,9 @@ public class UserDto
     }
     public long? AuthDate { get; set; }
     public string? Hash { get; set; }
+    public bool? IsOwner { get; set; }
+    public bool? CanCreateTasks { get; set; }
+    public Guid? BoardId { get; set; }
+    public DateTime? StartedAt { get; set; }
+    public bool? IsConfirmed { get; set; }
 }
