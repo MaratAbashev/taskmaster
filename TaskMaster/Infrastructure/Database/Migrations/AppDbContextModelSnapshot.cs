@@ -111,6 +111,9 @@ namespace Infrastructure.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("IsConfirmed")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -164,14 +167,14 @@ namespace Infrastructure.Database.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime?>("ApprovingDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<long?>("AuthorId")
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("BoardId")
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("CompletingDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");
@@ -180,6 +183,15 @@ namespace Infrastructure.Database.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("LeaderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("PriorityLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("SentToApproveDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
@@ -194,6 +206,8 @@ namespace Infrastructure.Database.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("BoardId");
+
+                    b.HasIndex("LeaderId");
 
                     b.ToTable("Tasks");
                 });
@@ -214,6 +228,11 @@ namespace Infrastructure.Database.Migrations
 
                     b.Property<string>("PhotoUrl")
                         .HasColumnType("text");
+
+                    b.Property<int?>("SocialRating")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Username")
                         .HasColumnType("text");
@@ -295,9 +314,15 @@ namespace Infrastructure.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.User", "Leader")
+                        .WithMany("LeadershipTasks")
+                        .HasForeignKey("LeaderId");
+
                     b.Navigation("Author");
 
                     b.Navigation("Board");
+
+                    b.Navigation("Leader");
                 });
 
             modelBuilder.Entity("Domain.Entities.TaskBoard", b =>
@@ -319,6 +344,8 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("AuthoredTasks");
 
                     b.Navigation("BoardUsers");
+
+                    b.Navigation("LeadershipTasks");
 
                     b.Navigation("RefreshTokens");
 

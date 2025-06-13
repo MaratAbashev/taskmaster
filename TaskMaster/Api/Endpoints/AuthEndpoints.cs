@@ -24,7 +24,7 @@ public static class AuthEndpoints
                         Secure = true,
                         Expires = authResult.Data.RefreshExpiresAt,
                         Path = "/auth/refresh",
-                        SameSite = SameSiteMode.Strict
+                        SameSite = SameSiteMode.None
                     });
                     return Results.Ok(mapper.Map<AuthResult>(authResult.Data));
                 })
@@ -45,7 +45,7 @@ public static class AuthEndpoints
                     Secure = true,
                     Expires = refreshResult.Data.RefreshExpiresAt,
                     Path = "/auth/refresh",
-                    SameSite = SameSiteMode.Strict
+                    SameSite = SameSiteMode.None
                 });
                 return Results.Ok(mapper.Map<AuthResult>(refreshResult.Data));
             });

@@ -61,10 +61,10 @@ public abstract class Repository<TEntity, TId>
     protected virtual async Task<TEntity> PatchAsync(TId id, Action<TEntity> patch)
     {
         var existingEntity = await _dbSet
-            .FirstOrDefaultAsync(e => e.Id.Equals(id));
+            .FirstAsync(e => e.Id.Equals(id));
         if (existingEntity == null)
         {
-            throw new ArgumentException("Entity not found");
+            throw new KeyNotFoundException("Entity not found");
         }
         patch(existingEntity);
         await context.SaveChangesAsync();

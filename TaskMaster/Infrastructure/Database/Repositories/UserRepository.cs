@@ -21,6 +21,7 @@ public class UserRepository(AppDbContext context, IMapper mapper) : Repository<U
             {
                 mapper.Map(userDto, user);
                 await context.SaveChangesAsync();
+                mapper.Map(user, userDto);
             }
             return Result<UserDto>.Success(userDto);
         }

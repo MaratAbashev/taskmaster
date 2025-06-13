@@ -20,5 +20,8 @@ public class ToDoTaskConfiguration: IEntityTypeConfiguration<ToDoTask>
         builder.HasOne(t => t.Author)
             .WithMany(a => a.AuthoredTasks)
             .HasForeignKey(t => t.AuthorId);
+        builder.HasOne(t => t.Leader)
+            .WithMany(a => a.LeadershipTasks)
+            .HasForeignKey(t => t.LeaderId);
     }
 }

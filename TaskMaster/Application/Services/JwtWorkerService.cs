@@ -5,17 +5,22 @@ using Configuration.Options;
 using Domain.Abstractions.Services;
 using Domain.Models;
 using Domain.Utils;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services;
 
-public class JwtWorkerService(IOptionsMonitor<JwtOptions> options) : IJwtWorkerService
+public class JwtWorkerService(
+    IOptionsMonitor<JwtOptions> options,
+    ILogger<JwtWorkerService> logger) : IJwtWorkerService
 {
     public Result<TokenDto> CreateTokens(UserDto userDto)
     {
         try
         {
+            logger.LogInformation("Начало создания токенов для пользователя {UserId}", userDto.Id);
+            
             var claims = new List<Claim>
             {
                 new("UserId", userDto.Id.ToString()),
@@ -42,10 +47,13 @@ public class JwtWorkerService(IOptionsMonitor<JwtOptions> options) : IJwtWorkerS
                 RefreshToken = Guid.NewGuid().ToString(),
                 AccessToken = jwtToken
             };
+            
+            logger.LogInformation("Токены успешно созданы для пользователя {UserId}", userDto.Id);
             return Result<TokenDto>.Success(tokenDto);
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Ошибка при создании токенов для пользователя {UserId}", userDto.Id);
             return Result<TokenDto>.Failure(ex.Message);
         }
     }
